@@ -2,10 +2,10 @@ SELECT
 firstName,
 lastName,
 jobTitle,
-employeeNumber as id_employee,
-customers.customerNumber as id_customers,
-orders.orderNumber as id_orders,
-orderDate,
+#employeeNumber as id_employee,
+#customers.customerNumber as id_customers,
+#orders.orderNumber as id_orders,
+month(orderDate) as Mois,
 sum(quantityOrdered * priceEach) as TotalOrder
 FROM
 employees
@@ -18,8 +18,8 @@ ON customers.customerNumber = orders.customerNumber
 JOIN
 orderdetails
 ON orders.orderNumber = orderdetails.orderNumber
-WHERE orderDate >= now()-interval 2 month
-GROUP BY
-orderDate
+WHERE month(orderDate)=month(current_date())-1 AND year(current_date())
+group by lastname
 ORDER BY
-TotalOrder DESC limit 2
+TotalOrder DESC 
+LIMIT 2
