@@ -1,0 +1,21 @@
+SELECT
+country,
+sum(quantityOrdered * priceEach) as total
+FROM
+customers
+JOIN
+orders
+ON customers.customerNumber = orders.customerNumber
+JOIN
+orderdetails
+ON orders.orderNumber = orderdetails.orderNumber
+WHERE
+orderDate
+BETWEEN
+date_add((SELECT orderDate FROM orders ORDER BY orderDate DESC LIMIT 1), interval -2 month)
+AND
+(SELECT orderDate FROM orders ORDER BY orderDate DESC LIMIT 1)
+GROUP BY
+country
+ORDER BY
+total desc
