@@ -1,0 +1,9 @@
+SELECT CONCAT(e.firstName," ",e.lastName) as NOM, SUM(quantityOrdered*priceEach) as VENTES, MONTH(o.orderDate) as MOIS
+FROM orderdetails as od
+JOIN orders as o ON od.orderNumber = o.orderNumber
+JOIN customers as c ON o.customerNumber = c.customerNumber
+JOIN employees as e ON c.salesRepEmployeeNumber = e.employeeNumber
+WHERE MONTH(o.orderDate) = MONTH(NOW()) - 1
+GROUP BY NOM
+ORDER BY VENTES DESC
+LIMIT 2
