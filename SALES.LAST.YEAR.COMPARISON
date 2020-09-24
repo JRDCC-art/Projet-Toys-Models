@@ -1,0 +1,23 @@
+# CREATION D'UNE TABLE VIRTUELLE
+
+CREATE OR REPLACE VIEW l (lod, loq, lon)
+AS
+SELECT o.orderDate, od.quantityOrdered, o.orderNumber
+FROM orders as o
+        JOIN orderDetails as od ON o.orderNumber = od.orderNumber
+        WHERE o.orderDate < DATE_SUB(current_date(), INTERVAL 1 YEAR);
+        
+# JOINTURE TABLE AVEC LA TABLE VIRTUELLE  
+
+SELECT 	pl.productLine as PRODUIT,
+		    MONTH(o.orderdate) as DATE,
+		    SUM(od.quantityOrdered),
+        SUM(l.loq) AS LAST_YEAR,
+        ((SUM(od.quantityOrdered) - SUM(l.loq))/SUM(l.loq)) as VARIATION
+FROM productlines as pl
+        JOIN products as p ON pl.productLine = p.productLine
+        JOIN orderdetails as od ON p.productCode = od.productCode
+        JOIN orders as o ON od.orderNumber = o.orderNumber
+        LEFT JOIN l ON o.orderNumber = l.lon
+GROUP BY PRODUIT, DATE
+ORDER BY o.orderDate DESC
