@@ -1,0 +1,9 @@
+#Logistics: The stock of the 5 most ordered products
+
+SELECT od.productCode, pr.productName, pr.quantityInStock, sum(od.quantityOrdered) AS totalQuantity
+FROM orderdetails AS od
+JOIN products AS pr
+ON pr.productCode = od.productCode
+GROUP BY od.productCode
+ORDER BY sum(od.quantityOrdered) DESC 
+LIMIT 5;
