@@ -1,0 +1,25 @@
+SELECT
+firstName,
+lastName,
+jobTitle,
+employeeNumber as id_employee,
+customers.customerNumber as id_customers,
+orders.orderNumber as id_orders,
+orderDate,
+sum(quantityOrdered * priceEach) as TotalOrder
+FROM
+employees
+JOIN
+customers
+ON employees.employeeNumber = customers.salesRepEmployeeNumber
+JOIN
+orders
+ON customers.customerNumber = orders.customerNumber
+JOIN
+orderdetails
+ON orders.orderNumber = orderdetails.orderNumber
+WHERE orderDate >= now()-interval 2 month
+GROUP BY
+orderDate
+ORDER BY
+TotalOrder DESC limit 2
