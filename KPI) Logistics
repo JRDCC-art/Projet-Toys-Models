@@ -1,0 +1,5 @@
+SELECT products.quantityInstock, products.productName, SUM( orderdetails.quantityOrdered) AS quantité_Commande
+FROM orderdetails
+JOIN products ON orderdetails.productCode = products.productCode
+GROUP BY products.productName
+ORDER BY SUM(orderdetails.quantityOrdered) DESC LIMIT 5
