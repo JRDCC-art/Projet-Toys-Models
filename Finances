@@ -1,0 +1,32 @@
+1ère requête : The turnover of the orders of the last two months by country
+
+SELECT c.country, sum(od.quantityOrdered * od.priceEach) AS turnover
+FROM customers AS c
+JOIN orders AS o
+ON c.customerNumber = o.customerNumber
+JOIN orderdetails AS od
+ON o.orderNumber = od.orderNumber
+WHERE o.orderDate BETWEEN DATE_SUB(DATE(NOW()), INTERVAL 2 MONTH) AND DATE(NOW()) #a vérifier que les données sont justes
+GROUP BY c.country
+ORDER BY c.country
+
+
+#Finances 2ème requête: Orders that have not yet been paid
+
+SELECT o.orderNumber, c.customerName
+FROM orders AS o
+JOIN customers AS c
+ON c.customerNumber = o.customerNumber
+LEFT JOIN payments AS p
+ON p.customerNumber = c.customerNumber
+WHERE p.checkNumber is NULL
+
+#OU
+
+SELECT o.orderNumber
+FROM orders AS o
+LEFT JOIN customers AS c
+ON c.customerNumber = o.customerNumber
+LEFT JOIN payments AS p
+ON p.customerNumber = c.customerNumber
+WHERE p.customerNumber is NULL
